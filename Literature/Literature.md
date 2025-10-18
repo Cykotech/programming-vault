@@ -1,0 +1,1 @@
+- [[Ch. 1 Information in Memory|Data Structures the Fun Way]]
