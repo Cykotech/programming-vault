@@ -97,3 +97,105 @@ public void LinkedListInsert (LinkedListNode<T> previous, LinkedListNode<T> newN
 	previous.Next = newNode;
 }
 ```
+
+One final consideration to take when inserting into a linked list is ensuring that the entire list points to the proper node when inserting before the current head of the list and ensuring that you don't insert past the end of the list.
+
+```cs
+public LinkedListNode<T> LinkedListInsert (LinkedListNode<T> head, int index, T data)
+{
+	// Consideration for inserting at the head of a list
+	if (index == 0)
+	{
+		var newHead = new LinkedListNode(value);
+		newHead.Next = head;
+		return newHead;
+	}
+	
+	LinkedListNode<T>? current = head;
+	LinkedListNode<T>? previous = null;
+	int count = 0;
+	
+	while (count < index && current != null)
+	{
+		previous = current;
+		current = current.Next;
+		count++;
+	}
+	
+	// Check that you did not run off the end of the list
+	if (count < index)
+		// Produce error or produce logic to handle
+	
+	var newNode = new LinkedListNode(value);
+	newNode.Next = previous.Next;
+	previous.Next = newNode;
+	
+	return head;
+}
+```
+
+It is important to return the head because the potential for changes allows us to account for insertions before the head. We could also wrap the head node in a composite linked list data structure to perform operations on that directly.
+
+## Deleting from a Linked List
+
+In order to delete an element in a linked list, the only required operations include deleting the desired node, and updating the previous node's pointer. In the case of an array, we would have to shift every element right of the deleted element to left on space. And just like with insertion, we must take special considerations when handling the head and end of a list. When deleting the current head of a list, we must be sure to return the new head. And when dealing with the end of list, you must consider skipping the deletion if the desired index is past the end, or returning an error.
+
+```cs
+public LinkedListNode<T>? LinkedListDelete(LinkedListNode<T>? head, int index)
+{
+	if (head == null)
+		return null;
+		
+	if (index == 0)
+	{
+		var newHead = head.Next;
+		head.Next = null;
+		return newHead;
+	}
+	
+	var current = head;
+	LinkedListNode<T>? previous = null;
+	int count = 0;
+	
+	while (count < index && current != null)
+	{
+		previous = current;
+		current = current.Next;
+		count++;
+	}
+	
+	if (current != null)
+	{
+		previous.Next = current.Next;
+		current.Next = null;
+	}
+	else
+	{
+		// Handle with an error
+	}
+	
+	return head;
+}
+```
+
+# Doubly Linked Lists
+
+Linked lists form the basis of many pointer based structures. One of the most common extensions is the doubly linked list. The core functionality is the same as a standard linked list, but now every node tracks it's own previous node.
+
+```cs
+class DoublyLinkedListNode<T>
+{
+	T Value { get; set; }
+	DoublyLinkedListNode<T> Next { get; set; }
+	DoublyLinkedListNode<T> Previous { get; set; }
+}
+```
+
+This new information makes operations involving previous nodes simpler. Instead of having to track the previous node ourselves or retraversing the list to find the previous node, each node now contains a pointer to the previous node. The code to perform an operation on a Doubly Linked List is similar to a standard Linked List, you just need to include updating a node's `previous` pointer as well.
+
+# Arrays and Linked Lists of Items
+
+While arrays and linked lists are different data structures, we can combine some of their concepts to increase the size of the structures that we are storing. For example, we want to store the list of names of people attending a party. How many characters do we need each element to store? What do we do about the waste when one person's name is significantly shorter than the limit? What happens if we want to store more data than what we initially planned for like music preferences for each guest? A great solution is to create an array that stores pointers. A pointer will always be a fixed size allowing us to store larger and more dynamic data elsewhere. It's very important to consider the trade offs of different data structures and consider how to use the strengths of one structure to improve on the weaknesses of another.
+
+[[Ch. 2 Binary Search|Previous Chapter]]
+[[Ch. 4 Stacks and Queues|Next Chapter]]
