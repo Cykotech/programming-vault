@@ -10,10 +10,10 @@ To circumnavigate this limitation, most programming languages offer a dynamic "a
 
 An array can't just dynamically grow to add a single value because the slot in memory beyond the end of the array might already be occupied. So instead of risking deleting an important variable, we must reallocate a new chunk of memory for a new array of the required size.
 
-If we know we are going to add a large amount of values, we can amortize the cost of the operation by using a strategy like array doubling. This can be expensive though because we now have to copy every element in the old array to the new array, or we might waste space by adding more elements than we actually need leading to empty space in memory.
+If we know we are going to add a large amount of values, we can amortize the cost of the operation by using a strategy like array doubling. This can be expensive though because we now have to copy every element in the old array to the new array, or we might waste space by adding more elements than we actually need leading to empty space in memory. ^array-doubling
 
 ```cs
-public int[] ArrayDouble(int[] arr)
+public static int[] ArrayDouble(int[] arr)
 {
 	int length = arr.Length;
 	int[] newArr = new Array(length * 2);
