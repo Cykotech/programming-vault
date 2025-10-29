@@ -22,7 +22,7 @@ string word = "The Bird";
 When you need to store many different variables together because of a relation or association to each other, you'll want to create a composite data structure. Most languages will refer to these as a struct or an object.
 
 ```cs
-public struct CoffeeRecord {
+public record CoffeeRecord {
 	string Name,
 	string Brand,
 	int Rating,
