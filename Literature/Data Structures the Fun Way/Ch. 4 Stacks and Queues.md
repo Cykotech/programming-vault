@@ -171,9 +171,13 @@ Search algorithm behavior varies greatly on the data structure we choose as well
 
 Depth-First Search is an algorithm that explores the depth of a path till the end is hit. The algorithm then returns to the last branching point, and checks other paths. Depth-First Search uses a stack by exploring the most recently inserted option. When browsing the web, you are presented with 3 different web pages. If you explore each page using Depth-First Search, you would follow every link until the displayed page has no links. You would then back track to the first page that has any unexplored links until you reach the last link on the third page.
 
+![[Depth_First_Search.png]]
+
 ## Breadth-First Search
 
 Breadth-First Search will explore the original 3 pages just as thoroughly as Depth-First Search, but the order in which the pages are explored will change. Instead of clicking each link as you come across it, you would save each link to a list, continue to read the web page, then proceed down the list adding new links to the bottom of the list till all 3 web pages are explored.
+
+![[Breadth_First_Search.png]]
 
 [[Ch. 3 Dynamic Data Structures|Previous Chapter]]
 [[Ch. 5 Binary Search Trees|Next Chapter]]
