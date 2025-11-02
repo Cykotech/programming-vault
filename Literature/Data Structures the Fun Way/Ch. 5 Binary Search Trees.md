@@ -161,4 +161,88 @@ Removing a leaf node is simple, we just delete the node and update the parent's 
 
 If the target node has a single child, we promote the child to be the child of the target's parent. This strategy of deletion is successful even if the child node has it's own subtree, because all of the nodes in the subtree were already sorted through the desired parent.
 
-Complexity increases signifigantly when the target node has two children.
+Complexity increases significantly when the target node has two children. The target node cannot just be deleted without finding the appropriate successor that maintains the integrity of the binary tree. We then swap that successor into the position of the deleted node. That successor might also have a child node that needs to be handled when removed from it's old position in the tree. To be able to handle this, we reuse the deletion operation on the node to be swapped. Since we are currently only handling the case where the target node to delete has two children, the successor will always be the minimum value in the right subtree.
+
+```cs
+public void RemoveTreeNode(BinarySearchTree<T> tree, TreeNode<T>? node)
+{
+	if (tree.Root == null || node == null)
+		return;
+	
+	if (node.Left == null && node.Right == null)
+	{
+		if (node.Parent == null)
+			tree.Root = null;
+		else if (node.Parent.Left == node)
+			node.Parent.Left = null;
+		else
+			node.Parent.Right = null;
+		
+		return;
+	}
+	
+	if (node.Left == null || node.Right == null)
+	{
+		var child = node.Left;
+		
+		if (node.Left == null)
+			child = node.Right;
+		
+		child.Parent = node.Parent;
+		
+		if (node.Parent == null)
+			tree.Root = child;
+		else if (node.Parent.Left == node)
+			node.Parent.Left = child;
+		else
+			node.Parent.Right = child;
+		
+		return;	
+	}
+	
+	var successor = node.Right;
+	
+	while (successor.Left != null)
+	{
+		successor = successor.Left;
+	}
+	
+	RemoveTreeNode(tree, successor);
+	
+	if (node.Parent == null)
+		tree.Root = successor;
+	else if (node.Parent.Left == node)
+		node.Parent.Left = successor;
+	else
+		node.Parent.Right = successor;
+	
+	successor.Parent = node.Parent;
+	
+	successor.Left = node.Left;
+	node.Left.Parent = successor;
+	
+	successor.Right = node.Right;
+	if node.Right != null
+		node.Right.Parent = successor;
+}
+```
+
+It is important to note that we call the delete operation using the pointer to the target node. So in order to delete a node, we must first find the node that contains the target value using the search operation.
+
+```cs
+public void DeleteNode(BinarySearchTree<T> tree, T value)
+{
+	var nodeToDelete = FindTreeNode(tree, value);
+	RemoveTreeNode(tree, nodeToDelete);
+}
+```
+
+Just like searching and insertion, the deletion operation will at most require traversal from the root node to the deepest node in the tree along a single path. Keeping the runtime at worst proportional to the depth of the tree.
+
+# The Danger of Unbalanced Trees
+
+Because operations performed on a binary tree scale with the depth of the tree, operations are optimal on trees that are perfectly balanced. A tree that becomes unbalanced becomes nothing more than a overly complex sorted linked list. When your tree becomes unbalanced to this degree, runtime no longer scales logarthimically, but linearly. There are more advanced versions of binary trees that keep a natural balance, but the trade off is further complexity.
+
+# Bulk Construction of Binary Search Trees
+
+A binary search tree can be constructed by iteratively adding nodes to the tree, but careless insertions can lead to an unbalanced tree. Balanced binary trees are created from sorted arrays. We recursively divide the array into subsets at each level and insert the middle value of each subset. Constructing a binary search tree this way does not require us to repeatedly copy the initial array. We can instead use a similar approach to [[Ch. 2 Binary Search|binary search]] and track the current range of the the subset. This requires us to only track the indices of the highest and lowest value in each subset. Once a new node is created and inserted, we repeat the process by further dividing each subset and inserting each middle value till there is only a single value in the range.
