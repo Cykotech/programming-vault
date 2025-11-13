@@ -246,3 +246,6 @@ Because operations performed on a binary tree scale with the depth of the tree, 
 # Bulk Construction of Binary Search Trees
 
 A binary search tree can be constructed by iteratively adding nodes to the tree, but careless insertions can lead to an unbalanced tree. Balanced binary trees are created from sorted arrays. We recursively divide the array into subsets at each level and insert the middle value of each subset. Constructing a binary search tree this way does not require us to repeatedly copy the initial array. We can instead use a similar approach to [[Ch. 2 Binary Search|binary search]] and track the current range of the the subset. This requires us to only track the indices of the highest and lowest value in each subset. Once a new node is created and inserted, we repeat the process by further dividing each subset and inserting each middle value till there is only a single value in the range.
+
+[[Ch. 4 Stacks and Queues|Previous Chapter]]
+[[Ch. 6 Tries and Adapting Data Structures|Next Chapter]]
