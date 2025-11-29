@@ -43,6 +43,8 @@ public class Trie
 
 The root of a trie will always be non-null. When the trie is created, the root will be initialized to be an empty string that does not represent.
 
+![[Trie.png]]
+
 ## Searching Tries
 
 Searching tries simplifies string comparison such that at each node, at each level we only need to compare the next character in the string, the sequence of the prefix has already been calculated. The complication of this approach is because this comparison changes at each level. You must be sure to properly increment the index of the string with each level. The trie wrapper allows us to abstract the initial counter and root node from the initial call.
@@ -111,6 +113,8 @@ public void TrieNodeInsert(TrieNode current, string value, int index)
 }
 ```
 
+![[Trie_Insertion.png]]
+
 Removing nodes follows a similar process but reversed. Instead of creating nodes from the last branch till we reach the target, we search for the target and work our way backwards till we find the first parent that contains other children. Our recursive function will return a Boolean value which will then notify the parent that the branch can be pruned.
 
 ```cs
@@ -146,6 +150,8 @@ public void TrieNodeDelete(TrieNode current, string target, int index)
 ```
 
 Since deletion requires making a round trip from the root to a single leaf, the cost of deletion is proportional to the length of the target string.
+
+![[Trie_Deletion.png]]
 
 # Conclusion
 
