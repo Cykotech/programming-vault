@@ -6,7 +6,7 @@ Binary search is an algorithm for efficiently searching through a sorted list by
 
 Before any problem can be solved, it must first be defined. The focus here will be finding a single item in a list that matches the given target value.
 
-Given a set of *N* data points *X = {x$_1$, x$_2$, ..., x$_N$}* and a target value *x'*, find a point *x$_i$ ∈ X* such that *x' = x$_i$*, or indicate that no such point exists.
+> Given a set of *N* data points *X = {x$_1$, x$_2$, ..., x$_N$}* and a target value *x'*, find a point *x$_i$ ∈ X* such that *x' = x$_i$*, or indicate that no such point exists.
 
 # Linear Scan
 

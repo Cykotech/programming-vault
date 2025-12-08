@@ -180,3 +180,6 @@ The runtime of this algorithm is bound by the worst case of the most expensive o
 # Conclusion
 
 While heaps are simple variations of a binary tree, the modifications required to support heap operations sacrifice our ability to efficiently search our data. But in turn, we now have the capability to consistently walk down a single path for each operation performed on the heap. In fact, doubling the amount of nodes in a heap typically adds a single iteration to the next operation as heaps are self balancing.
+
+[[Ch. 6 Tries and Adapting Data Structures|Previous Chapter]]
+[[Ch. 8 Grids|Next Chapter]]
