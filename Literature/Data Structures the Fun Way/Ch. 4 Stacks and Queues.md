@@ -113,7 +113,7 @@ If 5 elements are enqueued in the order `1, 2, 3, 4, 5`, then when dequeued, the
 
 ## Queues as Arrays
 
-When you implement a queue as an array, the two indicies you want to track are the first and last indicies. When we enqueue an element, we add it to the end of the array and increment the back index. When an element is dequeued, we remove the front element and increment the front index.
+When you implement a queue as an array, the two indices you want to track are the first and last indices. When we enqueue an element, we add it to the end of the array and increment the back index. When an element is dequeued, we remove the front element and increment the front index.
 
 Dequeueing from a fixed array runs into a big dilemma, an empty space quickly fills up at the front of the array. We can solve this with two methods. Shift each element forward every time you dequeue, or wrap the array. Shifting each element comes at a huge cost of shifting every element with every dequeue operation. When you wrap the array, you must start to consider how to handle the indicies as you increment past the end of the array. Wrapping does add complexity, but it avoids the cost of shifting elements.
 

@@ -66,3 +66,144 @@ This operation can be performed with linear scan, but as with one-dimensional da
 
 # Grids
 
+Grids are a structure designed for two-dimensional data sets. Similar to how arrays have a fixed set of elements, grids have a fixed set of cells or bins. Regardless of the application of the grid, since the data is two-dimensional, we typically visualize a grid with x and y axes. Unlike arrays, each bin is not restricted to a single value. A bin is bound with a high and low value that defines the range of data points that would be stored within that bin. Grids will use each point's coordinates to determine which bin will store the data.
+
+## Grid Structure
+
+As with every data structure the top level of the data structure includes additional information for defining each bin and how to interact with them. The first definition would include the number of bins along the x and y axes. Then we define the bounds of each bin by using a width property. This can be precomputed to help simplify the structure.
+
+```cs
+float xBinWidth = (XEnd - XStart) / NumXBins;
+float yBinWdith = (YEnd - YStart) / NumYBins;
+```
+
+There is other useful information that can be included in the grid, such as, the number of points stored or the number of empty bins.
+
+```cs
+class Grid<T>
+{
+	public int NumXBins { get; set; }
+	public int NumYBins { get; set; }
+	public float XStart { get; set; }
+	public float XEnd { get; set; }
+	public float XBinWidth { get; set; }
+	public float YStart { get; set; }
+	public float YEnd { get; set; }	
+	public float YBinWidth { get; set; }
+	public GridPoint[][] Bins { get; set; }
+}
+```
+
+In a fixed size grid, we can map a point using a simple equation.
+
+```cs
+int xBin = Math.Floor((x - XStart) / XBinWidth);
+int yBin = Math.Floor((y - YStart) / YBinWidth);
+```
+
+With previous data structures, each container only contained one value, with grids, each bin might potentially contain multiple values, so it is important that each bin contains a proper data structure to store it's own points. This is commonly done with a [[Ch. 3 Dynamic Data Structures#Linked List|linked list]]. Each bin would store the pointer to the head of a list which would contain all the points in that bin.
+
+```cs
+class GridPoint
+{
+	public float X { get; set; }
+	public float Y { get; set; }
+	public GridPoint Next { get; set; }
+}
+```
+
+## Building Grids and Inserting Points
+
+A grid begins construction by allocating the empty data structure, then iteratively inserting points using a simple for loop. The higher level structure is fixed during construction and does not change when data is added.
+
+```cs
+public bool GridInsert(Grid grid, float X, float Y)
+{
+	int xBin = Math.Floor((x - grid.XStart) / grid.XBinWidth);
+	int yBin = Math.Floor((y - grid.YStart) / grid.YBinWidth);
+	
+	if (xbin < 0 || xbin >= grid.NumXBins)
+		return false;
+	
+	if (ybin < 0 || ybin >= grid.NumYBins)
+		return false;
+	
+	GridPoint nextPoint = grid.Bins[xBin][yBin];
+	grid.Bins[xBin][yBin] = new GridPoint(x, y);
+	grid.Bins[xBin][yBin].Next = nextPoint;
+}
+```
+
+## Deleting Points
+
+The approach to deleting a point is similar. The difficulty arises in determining which point in the bin to delete. There might be values that are arbitrarily close or duplicate points. Because floating point variables have limited precision, we can use a helper function to help determine approximate equality.
+
+```cs
+public bool ApproxEqual(float x1, float y1, float x2, float y2)
+{
+	if (Math.Abs(x1 - x2) > threshold)
+		return false;
+	
+	if (Math.Abs(y1 - y2) > threshold)
+		return false
+	
+	return true;
+}
+```
+
+Each grid's threshold will be determined by the actual data stored and the precision of the programming language. Generally, it should be large enough to account for the accuracy of the the float.
+
+The deletion operation will consist of finding the correct bin, then traversing the contained list till a match is found, and splicing the match out of the list. The function will return a boolean based on successful deletion.
+
+```cs
+public bool Delete(Grid grid, float x, float y)
+{
+	int xBin = Math.Floor((x - grid.XStart) / grid.XBinWidth);
+	int yBin = Math.Floor((y - grid.YStart) / grid.YBinWidth);
+	
+	if (xBin < 0 || xbin > grid.NumXBins)
+		return false;
+	if (ybin < 0 || ybin > grid.NumYBins)
+		return false;
+		
+	if (grid.Bins[xBin][yBin] == null)
+		return false;
+		
+	GridPoint? current = grid.Bins[xBin][yBin];
+	GridPoint? previous = null;
+	
+	while (current != null)
+	{
+		if (ApproxEqual(x, y, current.X, current.Y))
+		{
+			if (previous == null)
+				grid.Bins[xBin][yBin] = current.Next;
+			else
+				previous.Next = current.Next;
+			
+			return true;
+		}
+		
+		previous = current;
+		current = current.Next;
+	}
+	
+	return false;
+}
+```
+
+# Searches Over Grids
+
+Implementing a nearest-neighbor search begins by pruning the cells in the grid that would be too far to consider, minimizing the amount of computations. Then we either scan each remaining bin linearly, or use an expanding search.
+
+## Pruning Bins
+
+The spatial structure of a grid enables limitations to how many points get checked. Once a candidate neighbor is established, it's distance to the desired value is then used to prune bins. We can use the bounds of each bin to determine if any point within the current bin could be closer than the current best candidate. If not, the bin can be ignored. This can be accomplished with a helper function that calculates Euclidean distance.
+
+```cs
+public float Distance(float x1, float, y1, float x2, float y2)
+{
+	return Math.Sqrt((x1 - x2)^2 + (y1 - y2)^2);
+}
+```
+

@@ -2,7 +2,6 @@
 
 - [[Programming/Languages/Ruby/Overview|Ruby]]
 - [[Programming/Languages/C Sharp/Overview|C#]]
-- [[JavaScript]]
 
 # Frameworks
 
