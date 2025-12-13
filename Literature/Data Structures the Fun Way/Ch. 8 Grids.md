@@ -207,3 +207,13 @@ public float Distance(float x1, float, y1, float x2, float y2)
 }
 ```
 
+We then use simple mathematics to evaluate bins for the closest possible point. If the closest possible point is further than the current best candidate, that bin can be automatically eliminated. If a point falls outside of the desired cell, then we can consider the Euclidean distance and consider each dimension independently. We calclulate the minimum distance to shift both point's dimensions to be within the cell's range.
+
+> *xMin = xStart + xBin \* xBinWidth
+> xMax = xStart + (xBin + 1) \* xBinWidth
+> yMin = yStart + yBin \* yBinWidth
+> yMax = yStart + (yBin + 1) \* yBinWidth*
+
+ The distance would then be calculated as follows:
+
+> *MinDist = √(x$_dist$*
