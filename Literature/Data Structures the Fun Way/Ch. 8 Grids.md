@@ -207,13 +207,108 @@ public float Distance(float x1, float, y1, float x2, float y2)
 }
 ```
 
-We then use simple mathematics to evaluate bins for the closest possible point. If the closest possible point is further than the current best candidate, that bin can be automatically eliminated. If a point falls outside of the desired cell, then we can consider the Euclidean distance and consider each dimension independently. We calclulate the minimum distance to shift both point's dimensions to be within the cell's range.
+We then use simple mathematics to evaluate bins for the closest possible point. If the closest possible point is further than the current best candidate, that bin can be automatically eliminated. If a point falls outside of the desired cell, then we can consider the Euclidean distance and consider each dimension independently. We calculate the minimum distance to shift both point's dimensions to be within the cell's range.
 
-> *xMin = xStart + xBin \* xBinWidth
-> xMax = xStart + (xBin + 1) \* xBinWidth
-> yMin = yStart + yBin \* yBinWidth
-> yMax = yStart + (yBin + 1) \* yBinWidth*
+```
+ xMin = xStart + xBin \* xBinWidth
+ xMax = xStart + (xBin + 1) \* xBinWidth
+ yMin = yStart + yBin \* yBinWidth
+ yMax = yStart + (yBin + 1) \* yBinWidth
+```
 
  The distance would then be calculated as follows:
 
-> *MinDist = √(x$_dist$*
+> *MinDist = √(${x_{dist}}^2$ + ${y_{dist}}^2$)*
+
+The distances applied to this formula are as follows:
+
+- If the point is lower than the dimension's minimum: `distance = min - point`
+- If the point is within the dimension's bounds: `distance = 0`
+- If the point is greater than the dimension's maximum: `distance = point - max`
+
+If the minimum distance to any possible point within the bin is greater than the current best candidate, then the bin can be ignored.
+
+```cs
+public float MinDistToBin(Grid grid, int xBin, int yBin, float x, float y)
+{
+	if (xBin < 0 || x > grid.NumXBins)
+		return Infinity;
+	
+	if (yBin < 0 || y > grid.NumYBins)
+		return Infinity;
+	
+	float xMin = grid.XStart + xBin * grid.xBinWidth;
+	float xMin = grid.XStart + (xBin + 1) * grid.xBinWidth;
+	float xDist = 0;
+	
+	if (x < xMin)
+		xDist = xMin - x;
+		
+	if (x > xMax)
+		xDist = x - xMax;
+	
+	float yMin = grid.YStart + yBin * grid.yBinWidth;
+	float yMin = grid.YStart + (yBin + 1) * grid.yBinWidth;
+	float yDist = 0;
+	
+	if (y < yMin)
+		yDist = yMin - y;
+		
+	if (y > yMax)
+		yDist = y - yMax;
+		
+	return Math.Sqrt(xDist ^ 2 + yDist ^ 2);
+}
+```
+
+## Linear Scan Over Bins
+
+Scanning through each bin linearly is a guaranteed but inefficient method to finding the nearest neighbor.
+
+```cs
+public GridPoint GridLinearScanNN(Grid grid, float x, float y)
+{
+	float bestDist = Infinity;
+	GridPoint? bestCandidate = null;
+	
+	int xBin = 0;
+	
+	while (xBin < grid.NumXBins)
+	{
+		int yBin = 0;
+		
+		while (yBin < grid.NumYBins)
+		{
+			if (MinDistToBin(grid, xBin, yBin, x, y) < bestDist)
+			{
+				GridPoint curr = grid.Bins[xBin][yBin];
+				
+				while (curr != null)
+				{
+					float dist = Distance(x, y, current.X, current.Y);
+					
+					if (dist < bestDist)
+					{
+						bestDist = dist;
+						bestCandidate = current;
+					}
+					
+					current = current.Next;
+				}
+			}
+			
+			yBin++;
+		}
+		
+		xBin++;
+	}
+	
+	return bestCandidate;
+}
+```
+
+This algorithm is great in the fact that it enables the elimination of entire bins. If a bin contains a large number of points that are close, but invalid, it saves a lot of time. But if a bin contains a small amount of points that are far, we waste time by considering the bin. Unlike insertions, linear scan works well with target points that exist inside or outside the bounds of the grid as the target point does not need to be mapped on the grid.
+
+## Ideal Expanding Search over Bins
+
+Linear scan is the first step to optimally searching our grid for our nearest neighbor by eliminating entire bins that might not contain a valid candidate. But an unnecessary amount of computations are performed by considering bins that far from our target point, even if we've already found best candidate. Improving this search will begin by considering bins in an order based on their proximity to the target. The search starts with the bin that would contain the target.
