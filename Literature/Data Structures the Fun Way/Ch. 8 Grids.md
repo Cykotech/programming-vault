@@ -62,6 +62,8 @@ When comparing two points, the typical formula will be the Euclidean distance.
 
 > *dist = √((x$_1$ - x$_2$)$^2$ + (y$_1$ - y$_2$)$^2$))*
 
+^ce0585
+
 This operation can be performed with linear scan, but as with one-dimensional data, this becomes inefficient as the data set grows larger. We can adapt our data into a different structure so that we can naturally eliminate large amounts of candidates. When operating on multiple search criteria, it is important to be able to consider all the values at once, as one dimension might yield a potential candidate that wouldn't even be close in another dimension.
 
 # Grids
@@ -220,7 +222,9 @@ We then use simple mathematics to evaluate bins for the closest possible point. 
 
 > *MinDist = √(${x_{dist}}^2$ + ${y_{dist}}^2$)*
 
-The distances applied to this formula are as follows:
+^3dbe93
+
+The distances applied to this formula are as follows: ^efea7d
 
 - If the point is lower than the dimension's minimum: `distance = min - point`
 - If the point is within the dimension's bounds: `distance = 0`
@@ -311,4 +315,140 @@ This algorithm is great in the fact that it enables the elimination of entire bi
 
 ## Ideal Expanding Search over Bins
 
-Linear scan is the first step to optimally searching our grid for our nearest neighbor by eliminating entire bins that might not contain a valid candidate. But an unnecessary amount of computations are performed by considering bins that far from our target point, even if we've already found best candidate. Improving this search will begin by considering bins in an order based on their proximity to the target. The search starts with the bin that would contain the target.
+Linear scan is the first step to optimally searching our grid for our nearest neighbor by eliminating entire bins that might not contain a valid candidate. But an unnecessary amount of computations are performed by considering bins that far from our target point, even if we've already found best candidate. Improving this search will begin by considering bins in an order based on their proximity to the target. The search starts with the bin that would contain the target. The search then expands outwards from the neighboring bins along the x and y axes only, then to each of those bins neighbors, all the way until the nearest neighbor is found.
+
+Once a candidate is found, an evaluation of all other bins that might contain a point within the radius of that candidate must be performed. There might be a closer neighbor just within the bounds of a neighboring bin. Once all bins within this radius have been evaluated, then we have our best candidate. The tradeoff to this exact, ideal approach is complexity. This could implemented with nested `for` loops and additional logic for ensuring we don't escape the bounds of the grid and also knowing when to stop scanning.
+
+## Simplified Expanding Search
+
+A simplified version of this search will use an expanding diamond instead of a perfect spiral. For this implementation, we can use the Manhattan distance to count the steps between grid cells:
+
+> *d = |xbin$_1$ - xbin$_2$| + |ybin$_1$ - ybin$_2$|*
+
+An important consideration for this method is that it can be suboptimal for grids with nonequilateral bins.
+
+The first iteration of this approach starts the same as the spiral, evaluate the bin in which the target would fall in. Each subsequent iteration then evaluates all the bins one step further than the last. For now, each bin we check will be scanned linearly to find the closest point in each bin. The steps for checking bins will differ as we need to follow the pattern of an expanding diamond. After each iteration, if there are no cells that can be considered valid, then it can be concluded that there are no valid points for candidacy `d` steps away from the target.
+
+```cs
+public GridPoint? GridCheckBin(Grid grid, int xBin, int ybin, float x, float y, float threshold)
+{
+	if (xBin < 0 || xBin >= grid.NumXBins)
+		return null;
+		
+	if (yBin < 0 || yBin >= grid.NumYBins)
+		return null;
+	
+	GridPoint? bestCandidate = null;
+	float bestDist = threshold;
+	GridPoint current = grid.Bins[xBin][yBin];
+	
+	while (current != null)
+	{
+		float dist = Distance(x, y, current.X, current.Y);
+		
+		if (dist < bestDist)
+		{
+			bestDist = dist;
+			bestCandidate = current;
+		}
+		
+		current = current.Next;
+	}
+	
+	return bestCandidate;
+}
+
+public GridPoint? GridSearchExpanding(Grid grid, float x, float y)
+{
+	float bestDist = Infinity;
+	GridPoint? bestPoint = null;
+	
+	int xb = Math.Floor((x - grid.XStart) / grid.XBinWidth);
+	
+	if (xb < 0)
+		xb = 0;
+	
+	if (xb >= grid.NumXBins)
+		xb = grid.NumXBins - 1;
+		
+	int yb = Math.Floor((y - grid.YStart) / grid.YBinWidth);
+	
+	if (yb < 0)
+		yb = 0;
+	
+	if (yb >= grid.NumYBins)
+		yb = grid.NumYBins - 1;
+	
+	int steps = 0;
+	bool explore = true;
+	
+	while (explore)
+	{
+		explore = false;
+		
+		int xOff = steps * -1;
+		
+		while (xOff <= steps)
+		{
+			int yOff = steps - Math.Abs(xOff);
+			
+			if (MinDistToBin(grid, xb + xOff, yb - yOff, x, y) < bestDist)
+			{
+				GridPoint point = GridCheckBin(grid, xb + xOff, yb - yOff, x, y, bestDist);
+				
+				if (point != null)
+				{
+					bestDist = Distance(x, y, point.X, point.Y);
+					bestPoint = point;
+				}
+				
+				explore = true;
+			}
+			
+			if (MinDistToBin(grid, xb + xOff, yb + yOff, x, y) < bestDist && yOff != 0)
+			{
+				GridPoint point = GridCheckBin(grid, xb + xOff, yb - yOff, x, y, bestDist);
+				
+				if (point != null)
+				{
+					bestDist = Distance(x, y, point.X, point.Y);
+					bestPoint = point;
+				}
+				
+				explore = true;
+			}
+			
+			xOff++;
+		}
+		
+		steps++;
+	}
+	
+	return bestPoint;
+}
+```
+
+# The Importance of Grid Size
+
+A grid's bin size massively impacts the efficiency of search algorithms on our grid. Currently, when a bin gets checked, each point in a bin is scanned linearly, meaning that larger bins turns into longer runtimes per bin. However, making the bins too small, can cause issues with wasted memory of excessive empty bins. The optimal grid size can be determined by multiple factors, including number of points and distribution.
+
+# Beyond Two Dimensions
+
+Grids can be scaled to higher dimensions by using the same formula introducing a *z* coordinate.
+
+> *dist = √((x$_1$ - x$_2$)$^2$ + (y$_1$ - y$_2$)$^2$ + (z$_1$ - z$_2$)$^2$)*
+
+Or in a more general sense, we can define the distance of *d*-dimensional data, where *d* represents the dimension of the *i*th point.
+
+> *dist(x$_1$, x$_2$) = √((∑$_d$(x$_1$\[d] - x$_2$\[d])$^2$)*
+
+Higher dimensions introduces a new challenge to grids, the memory required to store. A 5x5 grid would require a total of 25 1x1 bins. Adding a third dimension of the same size increases the total bins to 125. As the number of bins increases exponentially, the number of empty bins increases as well, meaning the potential for wasted calculations increases.
+
+# Beyond Spatial Data
+
+Spatial data is easily visualized as points on a map. It's easy to consider what is closer when physical distances are the values. But when the values in our grid are attributes of a data object, we must reconsider how define "closeness". Points on our grid still have values to which we can calculate the "distance" between them, but sometimes we want to consider one attribute more important than the other. We can add another value to our Euclidean distance formula to consider the weight (*w*) of these attributes.
+
+> *dist(x$_1$, x$_2$) = √((∑$_d$w$_d$(x$_1$\[d] - x$_2$\[d])$^2$)*
+
+[[Ch. 7 Priority Queues and Heaps|Previous Chapter]]
+[[Ch. 9 Spatial Trees|Next Chapter]]
