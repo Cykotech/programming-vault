@@ -70,6 +70,7 @@ This operation can be performed with linear scan, but as with one-dimensional da
 
 Grids are a structure designed for two-dimensional data sets. Similar to how arrays have a fixed set of elements, grids have a fixed set of cells or bins. Regardless of the application of the grid, since the data is two-dimensional, we typically visualize a grid with x and y axes. Unlike arrays, each bin is not restricted to a single value. A bin is bound with a high and low value that defines the range of data points that would be stored within that bin. Grids will use each point's coordinates to determine which bin will store the data.
 
+![[Grid.png]]
 ## Grid Structure
 
 As with every data structure the top level of the data structure includes additional information for defining each bin and how to interact with them. The first definition would include the number of bins along the x and y axes. Then we define the bounds of each bin by using a width property. This can be precomputed to help simplify the structure.
@@ -96,6 +97,8 @@ class Grid<T>
 }
 ```
 
+![[Grid_Structure.png]]
+
 In a fixed size grid, we can map a point using a simple equation.
 
 ```cs
@@ -114,6 +117,7 @@ class GridPoint
 }
 ```
 
+![[Grid_Point_Example.png]]
 ## Building Grids and Inserting Points
 
 A grid begins construction by allocating the empty data structure, then iteratively inserting points using a simple for loop. The higher level structure is fixed during construction and does not change when data is added.

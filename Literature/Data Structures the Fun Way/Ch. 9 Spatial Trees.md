@@ -4,7 +4,7 @@ Grids are already an excellent structure for when it is no longer efficient to o
 
 # Quadtrees
 
-Grids, while they offer the conveinence of storing two-dimensional data, come with a heavy overhead of either creating too many bins, which may become empty, or storing too many points in one bin. To solve this, we can establish an additional structure when needed. We can partition off another bin when one becomes too full. The structure used to acheive this is a *uniform quadtree*.
+Grids, while they offer the convenience of storing two-dimensional data, come with a heavy overhead of either creating too many bins, which may become empty, or storing too many points in one bin. To solve this, we can establish an additional structure when needed. We can partition off another bin when one becomes too full. The structure used to achieve this is a *uniform quadtree*.
 
 A uniform quadtree marries the branching structure of trees to grids. The root node represents the entire space covered by the tree. Each of the four branches in the tree represent an equally sized quadrant of the root space. Each branch can be commonly labelled as NorthWest, NorthEast, SouthWest, and SouthEast. Internal nodes can store up to four pointers to children, along with the associated metadata (number of points in the branch, regional spatial bounds, etc.). Leaf nodes store the list of points within the region. A single structure can be used for both internal and leaf nodes. A 2x2 grid can be used to store the pointers to child nodes for internal nodes while also used as the array of points for leaf nodes.
 
@@ -28,7 +28,7 @@ struct Point
 }
 ```
 
-Instead of explicitly storing the bounds of each node, the bounds can be derived from the number of splits in the sequence. This brings the decision of which is valued more, saving memory or having quicker lookups.  The power of a quadree is adaptive branching at each level, creating a hierarchical grid. The wrapper class for a quadtree contains a root node that defines the boundaries of the entire tree along with an empty list of children and points.
+Instead of explicitly storing the bounds of each node, the bounds can be derived from the number of splits in the sequence. This brings the decision of which is valued more, saving memory or having quicker lookups.  The power of a quadtree is adaptive branching at each level, creating a hierarchical grid. The wrapper class for a quadtree contains a root node that defines the boundaries of the entire tree along with an empty list of children and points.
 
 ```cs
 class Quadtree

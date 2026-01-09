@@ -20,7 +20,11 @@ Priority queues can be suboptimally implemented with primitive data structures l
 
 A max heap is another variation of the binary search tree that stores data based on the max heap property. The max heap property is what sorts inserted data by greater or less priority, just like a binary tree stores data that is greater than or less than. Unlike binary trees, the heap has no preference for storing data to the left or right, moving down a level in the heap only decreases the priority of the data. The heap's simplicity makes very optimal for priority queues.
 
-While heaps are commonly visualized as a tree, they are typically implemented with arrays. In an array-based implementation, the root node will always be stored at index 1, while each node's children will be store relative to their parent's index, which will always be *2i* and *2i + 1*. The 0-th index skipped so that we can adhere to this convention. Because children are indexed on a simple mathematical calculation, we can find a node's parent just the same by using `Math.Floor(i/2)`. Since the maximum value is always stored in a fixed location (i = 1), look up of that value will always be in constant time.
+While heaps are commonly visualized as a tree, they are typically implemented with arrays. In an array-based implementation, the root node will always be stored at index 1, while each node's children will be store relative to their parent's index, which will always be *2i* and *2i + 1*. The 0-th index skipped so that we can adhere to this convention. Because children are indexed on a simple mathematical calculation, we can find a node's parent just the same by using `Math.Floor(i/2)`. Since the maximum value is always stored in a fixed location *(i = 1)*, look up of that value will always be in constant time.
+
+![[Heap_As_Binary_Tree.png]]
+
+![[Heap_As_Array.png]]
 
 Adding and removing elements from an array presents the issue of [[Ch. 3 Dynamic Data Structures#^array-doubling|resizing an array]]. This would waste the efficiency of the heap. We can circumvent this by allocating a large array, and tracking the last inserted element in the heap as a virtual end of the array and enable expanding the heap as simple as updating a pointer. Overallocation, however, does come at the cost of wasted memory.
 
@@ -38,6 +42,10 @@ Using an array as the core of a tree-like structure such as a heap is interestin
 ## Adding Elements to a Heap
 
 When adding new elements to a heap, we must maintain the max heap property. New elements must be inserted below higher priority elements while still be sorted above lower priority elements. Inserting new elements in the middle of an array is an expensive linear operation. Since the array is packed, we can insert the new element at the end of the array and bubble up the element until the new node is less than or equal to its parent, maintaining the max heap property.
+
+![[Heap_Insertion_1.png]]
+
+![[Heap_Insertion_2.png]]
 
 ```cs
 public void Insert(Heap<T> heap, T value)
@@ -67,6 +75,12 @@ Heap insertions are inherently inexpensive. In the worst case, you have to swap 
 ## Removing Highest-Priority Elements from Heaps
 
 Looking up and removing the highest priority element is the core operation of a heap. To remove this node, the heap property must first be broken, then restored. The first step is swapping the root and last nodes in the tree. In an array implementation, this corresponds to swapping the first and last elements in the array. Since we are removing the highest-priority, this swap fills the gap created by the retrieval. To fix the heap property, we start at the incorrect root node and walk it down the tree. At each level, we compare this node to the current location's children and swap it with the larger of the two. The operation terminates when there are either no children remaining or niether child is larger than the current node. The worst case scenario for this operation is the same as an insertion.
+
+![[Heap_Removal_1.png]]
+
+![[Heap_Removal_2.png]]
+
+![[Heap_Removal_3.png]]
 
 ```cs
 public T Remove(Heap<T> heap)
