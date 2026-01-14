@@ -8,6 +8,8 @@ Grids, while they offer the convenience of storing two-dimensional data, come wi
 
 A uniform quadtree marries the branching structure of trees to grids. The root node represents the entire space covered by the tree. Each of the four branches in the tree represent an equally sized quadrant of the root space. Each branch can be commonly labelled as NorthWest, NorthEast, SouthWest, and SouthEast. Internal nodes can store up to four pointers to children, along with the associated metadata (number of points in the branch, regional spatial bounds, etc.). Leaf nodes store the list of points within the region. A single structure can be used for both internal and leaf nodes. A 2x2 grid can be used to store the pointers to child nodes for internal nodes while also used as the array of points for leaf nodes.
 
+![[Quadtree.png]]
+
 ```cs
 class QuadTreeNode
 {
@@ -30,6 +32,8 @@ struct Point
 
 Instead of explicitly storing the bounds of each node, the bounds can be derived from the number of splits in the sequence. This brings the decision of which is valued more, saving memory or having quicker lookups.  The power of a quadtree is adaptive branching at each level, creating a hierarchical grid. The wrapper class for a quadtree contains a root node that defines the boundaries of the entire tree along with an empty list of children and points.
 
+![[Quadtree_Partition.png]]
+
 ```cs
 class Quadtree
 {
@@ -46,6 +50,8 @@ As a quadtree is built, the space is recursively subdivided with no awareness of
 - **Has a maximum depth been reached?**: The quadtree can be limited to reach a certain level to preserve computation costs on excessive subdivision.
 
 When constructing quadtrees from already existing data, it is typically best practice to iteratively add the data points to an empty quadtree.
+
+![[Quadtree_Branching.png]]
 
 ## Adding Points
 
@@ -322,7 +328,9 @@ K-d trees do not have the same grid-like structure of a quadtree, but is empower
 
 K-d trees dynamically adjust based on the data at each node. A split is not constrained to the midpoint of any dimension. Instead of partitioning space into 2$^d$ equally sized cells, a dimension and value is selected based upon suitability for the data at that node. Internal nodes then store the dimension that is being partitioned (*splitDim*) and the value that represents the partition (*splitVal*). The points are then assigned to the left and right children based on partition value.
 
-Instead of splitting on alternating dimensions, the tree structure can be tailored by choosing splits from additional criteria that can improve search functions. A split can be made based on the widest dimension, or based on the distribution of points along any dimension. A k-d tree's flexible structure requires additional care when dealing with a node's spatial bounds. While each dimension may start as a perfect square, the shape and size of each node will be different. The area of a node is tracked by the definition of it's spatial bounds, which is calculated by the minimum and maximum value in the current dimension. Since there are an abitrary count of dimensions, the bounds of each dimension is stored in two arrays, *xMin* & *xMax*. All points in the k-d tree satisfy this statement:
+![[K_D_Tree.png]]
+
+Instead of splitting on alternating dimensions, the tree structure can be tailored by choosing splits from additional criteria that can improve search functions. A split can be made based on the widest dimension, or based on the distribution of points along any dimension. A k-d tree's flexible structure requires additional care when dealing with a node's spatial bounds. While each dimension may start as a perfect square, the shape and size of each node will be different. The area of a node is tracked by the definition of it's spatial bounds, which is calculated by the minimum and maximum value in the current dimension. Since there are an arbitrary count of dimensions, the bounds of each dimension is stored in two arrays, *xMin* & *xMax*. All points in the k-d tree satisfy this statement:
 
 > *xMin*[d] <= *pt*[d] <= *xMax*[d] FOR ALL *d*
 
@@ -355,7 +363,7 @@ class Point
 }
 ```
 
-In order to maintain consistency with each operation, it is helpful to store the number of dimensions in the wrapper class so that it remains fixed after creation. It is also important to remember that choosing a partitioning strategy really highlights the strengths of a k-d tree. As points cluster together, partitions can be performed in a way to provide the most information. While quadtrees will always partition to equally sized areas, k-d trees can partition to evenly divide points into seperate nodes or keep a tight group of points together.
+In order to maintain consistency with each operation, it is helpful to store the number of dimensions in the wrapper class so that it remains fixed after creation. It is also important to remember that choosing a partitioning strategy really highlights the strengths of a k-d tree. As points cluster together, partitions can be performed in a way to provide the most information. While quadtrees will always partition to equally sized areas, k-d trees can partition to evenly divide points into separate nodes or keep a tight group of points together.
 
 ## Tighter Spatial Bounds
 

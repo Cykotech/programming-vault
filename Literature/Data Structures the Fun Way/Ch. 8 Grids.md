@@ -215,6 +215,8 @@ public float Distance(float x1, float, y1, float x2, float y2)
 
 We then use simple mathematics to evaluate bins for the closest possible point. If the closest possible point is further than the current best candidate, that bin can be automatically eliminated. If a point falls outside of the desired cell, then we can consider the Euclidean distance and consider each dimension independently. We calculate the minimum distance to shift both point's dimensions to be within the cell's range.
 
+
+
 ```
  xMin = xStart + xBin \* xBinWidth
  xMax = xStart + (xBin + 1) \* xBinWidth
@@ -323,6 +325,8 @@ Linear scan is the first step to optimally searching our grid for our nearest ne
 
 Once a candidate is found, an evaluation of all other bins that might contain a point within the radius of that candidate must be performed. There might be a closer neighbor just within the bounds of a neighboring bin. Once all bins within this radius have been evaluated, then we have our best candidate. The tradeoff to this exact, ideal approach is complexity. This could implemented with nested `for` loops and additional logic for ensuring we don't escape the bounds of the grid and also knowing when to stop scanning.
 
+![[Grid_Ideal_Expanding_Search.png]]
+
 ## Simplified Expanding Search
 
 A simplified version of this search will use an expanding diamond instead of a perfect spiral. For this implementation, we can use the Manhattan distance to count the steps between grid cells:
@@ -332,6 +336,8 @@ A simplified version of this search will use an expanding diamond instead of a p
 An important consideration for this method is that it can be suboptimal for grids with nonequilateral bins.
 
 The first iteration of this approach starts the same as the spiral, evaluate the bin in which the target would fall in. Each subsequent iteration then evaluates all the bins one step further than the last. For now, each bin we check will be scanned linearly to find the closest point in each bin. The steps for checking bins will differ as we need to follow the pattern of an expanding diamond. After each iteration, if there are no cells that can be considered valid, then it can be concluded that there are no valid points for candidacy `d` steps away from the target.
+
+![[Grid_Simplified_Expanding_Search.png]]
 
 ```cs
 public GridPoint? GridCheckBin(Grid grid, int xBin, int ybin, float x, float y, float threshold)
