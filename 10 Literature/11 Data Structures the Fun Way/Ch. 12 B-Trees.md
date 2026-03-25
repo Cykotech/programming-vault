@@ -1,3 +1,4 @@
+#dsa
 # Introduction
 
 Caches demonstrate the cost of accessing data across various media. A step further in this problem involves accessing new blocks of data. B-trees are a self-balancing tree-based structure that account for the cost of retrieving blocks of new data. B-trees store multiple pieces of data within a single node. This enables the cost of extracting all of the values to be paid at once up front, and once stored all of these values can be accessed quickly. The further tradeoff is increased complexity within each node.

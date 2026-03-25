@@ -1,3 +1,4 @@
+#dsa
 # Introduction
 
 Basic data structures give us a place to store data, but they lack the ability to properly respond to changes in that data. For example, if we change the value of an element in a sorted array, we will need to resort that array. Or if we need to change the size of the array by shrinking or growing it, static data structures are not optimal.
@@ -6,7 +7,7 @@ Basic data structures give us a place to store data, but they lack the ability t
 
 Arrays are great at storing multiple values, but suffer from big fallback, their size and layout are fixed in memory at the time of creation. In order to modify the array, we need to create a new array by overwriting the existing array and copying the data. 
 
-To circumnavigate this limitation, most programming languages offer a dynamic "array" that grows and shrinks as you add and remove data. But these are typically wrappers around a static array. See [[Lists]] for an example. While these array wrappers are convenient, they can lead to a series of inefficiencies because of the changes in memory used behind the scenes.
+To circumnavigate this limitation, most programming languages offer a dynamic "array" that grows and shrinks as you add and remove data. But these are typically wrappers around a static array. While these array wrappers are convenient, they can lead to a series of inefficiencies because of the changes in memory used behind the scenes.
 
 An array can't just dynamically grow to add a single value because the slot in memory beyond the end of the array might already be occupied. So instead of risking deleting an important variable, we must reallocate a new chunk of memory for a new array of the required size.
 

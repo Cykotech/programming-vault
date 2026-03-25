@@ -1,3 +1,4 @@
+#dsa
 # Introduction
 
 A hash table is a dynamic data structure hyper optimized for insertions and lookups. Hash tables use mathematical functions to point to the location of the data. These are best used when the goal is to store data for quick searches and retrievals.

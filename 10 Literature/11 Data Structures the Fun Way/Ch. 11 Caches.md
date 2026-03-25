@@ -1,3 +1,4 @@
+#dsa
 # Introduction
 
 Caches are a data structure designed to alleviate high data access by storing data closer to a computation. Algorithmic efficiency is very much effected by the cost of data access. How data is stored is not the only factor in this regard, but the type of storage that is used. Caches can be used to increase performance of websites. The browser will often cache commonly accessed data if a web page consists of large amounts of data such as images or videos. Instead of redownloading the logo of a website every time a new page loads, the browser will store the image in the local harddrive to reduce load times.

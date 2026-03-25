@@ -1,3 +1,4 @@
+#dsa
 # Introduction
 
 Binary search trees are an excellent structure at storing data in an organized fashion. But they are only one method of implementing a tree like structure. Instead of using a greater than or less than comparison, we can modify how the tree splits data to optimize the tree for the problem. Strings are a common data type that need to have more optimal structures. Tries are trees that split on a single character, reducing the operation cost on comparing strings in deep trees.
@@ -118,7 +119,7 @@ public void TrieNodeInsert(TrieNode current, string value, int index)
 Removing nodes follows a similar process but reversed. Instead of creating nodes from the last branch till we reach the target, we search for the target and work our way backwards till we find the first parent that contains other children. Our recursive function will return a Boolean value which will then notify the parent that the branch can be pruned.
 
 ```cs
-public void TrieNodeDelete(TrieNode current, string target, int index)
+public bool TrieNodeDelete(TrieNode current, string target, int index)
 {
 	if (index == target.Length)
 		if (current.IsEntry)
@@ -132,7 +133,7 @@ public void TrieNodeDelete(TrieNode current, string target, int index)
 		if (nextChild != null)
 		{
 			if (TrieNodeDelete(nextChild, target, index + 1))
-				churrent.Children[nextIndex] = null;
+				current.Children[nextIndex] = null;
 		}
 	}
 	

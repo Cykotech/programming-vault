@@ -1,3 +1,4 @@
+#dsa
 # Introduction
 
 [[Ch. 4 Stacks and Queues|Stacks and queues]] are a simple data structure that access data based on the order it was inserted. Priority queues take this a step further by adding an additional property of retrieval order.

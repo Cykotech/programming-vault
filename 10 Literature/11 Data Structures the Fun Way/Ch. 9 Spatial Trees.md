@@ -1,3 +1,4 @@
+#dsa
 # Introduction
 
 Grids are already an excellent structure for when it is no longer efficient to organize data in a single dimension. Quadtrees and k-d trees are two data structure classes that allow us to adapt our structure to enable efficient operations on tighter distribution of data or scale our structure beyond two dimensions.

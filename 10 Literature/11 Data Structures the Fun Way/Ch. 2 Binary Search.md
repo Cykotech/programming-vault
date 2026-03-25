@@ -1,3 +1,4 @@
+#dsa
 # Introduction
 
 Binary search is an algorithm for efficiently searching through a sorted list by repeatedly dividing the list in half determining which half contains the target value. Binary search demonstrates how clever algorithms can use a data's structure to achieve significant computational savings.

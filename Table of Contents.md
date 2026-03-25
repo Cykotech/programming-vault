@@ -1,7 +1,6 @@
-# Languages
+```dataview
+LIST
+FROM #moc
+SORT file.name asc
+```
 
-- [[Programming/Languages/C Sharp/Overview|C#]]
-
-# Literature
-
-- [[Literature#^01e81e|Data Structures the Fun Way]]

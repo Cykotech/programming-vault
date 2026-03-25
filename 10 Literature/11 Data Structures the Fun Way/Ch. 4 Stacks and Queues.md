@@ -1,3 +1,4 @@
+#dsa
 # Introduction
 
 Stacks and queues are data structures that change how stored data is retrieved based on the order it was inserted. Stacks fetch the most recently inserted data (LIFO) and queues fetch the data that was inserted first (FIFO). Stacks are at the core of depth-first search, where you can look further down a path until you reach a dead-end before looking down another path. Queues enable breadth-first search which is where you shallowly explore a path before going deeper.

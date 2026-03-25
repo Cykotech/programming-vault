@@ -1,5 +1,4 @@
 %% Begin Waypoint %%
-- [[checked]]
-- [[foreach]]
+- **[[Fundamentals]]**
 
 %% End Waypoint %%

@@ -1,3 +1,4 @@
+#dsa
 # Introduction
 
 Sometimes data needs to be sorted by multiple values. This requires the use of a multi-dimensional data structure. A grid is a common base for most spatial data structures.
@@ -137,6 +138,8 @@ public bool GridInsert(Grid grid, float X, float Y)
 	GridPoint nextPoint = grid.Bins[xBin][yBin];
 	grid.Bins[xBin][yBin] = new GridPoint(x, y);
 	grid.Bins[xBin][yBin].Next = nextPoint;
+	
+	return true;
 }
 ```
 
@@ -218,10 +221,10 @@ We then use simple mathematics to evaluate bins for the closest possible point. 
 
 
 ```
- xMin = xStart + xBin \* xBinWidth
- xMax = xStart + (xBin + 1) \* xBinWidth
- yMin = yStart + yBin \* yBinWidth
- yMax = yStart + (yBin + 1) \* yBinWidth
+ xMin = xStart + xBin * xBinWidth
+ xMax = xStart + (xBin + 1) * xBinWidth
+ yMin = yStart + yBin * yBinWidth
+ yMax = yStart + (yBin + 1) * yBinWidth
 ```
 
  The distance would then be calculated as follows:
@@ -248,7 +251,7 @@ public float MinDistToBin(Grid grid, int xBin, int yBin, float x, float y)
 		return Infinity;
 	
 	float xMin = grid.XStart + xBin * grid.xBinWidth;
-	float xMin = grid.XStart + (xBin + 1) * grid.xBinWidth;
+	float xMax = grid.XStart + (xBin + 1) * grid.xBinWidth;
 	float xDist = 0;
 	
 	if (x < xMin)
@@ -258,7 +261,7 @@ public float MinDistToBin(Grid grid, int xBin, int yBin, float x, float y)
 		xDist = x - xMax;
 	
 	float yMin = grid.YStart + yBin * grid.yBinWidth;
-	float yMin = grid.YStart + (yBin + 1) * grid.yBinWidth;
+	float yMax = grid.YStart + (yBin + 1) * grid.yBinWidth;
 	float yDist = 0;
 	
 	if (y < yMin)
