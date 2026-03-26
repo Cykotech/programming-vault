@@ -1,7 +1,6 @@
 #moc 
 
 %% Begin Waypoint %%
-- **MVP**
-	- [[Client Side Auth]]
+- **[[31 Restaurant Management System]]**
 
 %% End Waypoint %%
