@@ -19,8 +19,8 @@ Where this shows up in real systems.
 ## Core Concepts
 Key pieces that make up this topic.
 
-- [[Related Concept]]
-- [[Another Concept]]
+- 
+- 
 
 ## How It Works
 Step-by-step explanation of the mechanism.
